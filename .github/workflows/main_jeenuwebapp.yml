@@ -19,10 +19,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Python version
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
 
       # 🛠️ Local Build Section (Optional)
       # The following section in your workflow is designed to catch build issues early on the client side, before deployment. This can be helpful for debugging and validation. However, if this step significantly increases deployment time and early detection is not critical for your workflow, you may remove this section to streamline the deployment process.
       - name: Create and Start virtual environment and Install dependencies
+        run: |
+          python -m venv antenv
+          source antenv/bin/activate
+          pip install -r requirements.txt
                 
       # By default, when you enable GitHub CI/CD integration through the Azure portal, the platform automatically sets the SCM_DO_BUILD_DURING_DEPLOYMENT application setting to true. This triggers the use of Oryx, a build engine that handles application compilation and dependency installation (e.g., pip install) directly on the platform during deployment. Hence, we exclude the antenv virtual environment directory from the deployment artifact to reduce the payload size. 
       - name: Upload artifact for deployment jobs
@@ -55,9 +63,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_0F66D6C203F7463C936001A0545824E2 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F32535CDBB17493D8CB177077BCC16E8 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B7E292FFAC3A45679CE5DA89274B34A1 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_EA3909069A5C4E40A5CB8F4DC3795882 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_4E144E832AFB45C7A1F77897A92B58DF }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_F4E1583415E945B6BF5D1AFC5F5B6F7B }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
@@ -65,5 +73,4 @@ jobs:
         with:
           app-name: 'Jeenuwebapp'
           slot-name: 'Production'
-
           
